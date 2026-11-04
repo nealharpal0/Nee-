@@ -1,0 +1,13 @@
+{
+  // fluks AI-scan: alleen statische bestanden, geen Worker-script nodig.
+  // Zet vóór het deployen index.html in ./public (zie README.md, stap 1).
+  "name": "fluks-ai-scan",
+  "compatibility_date": "2026-11-04",
+  "assets": {
+    "directory": "./public"
+  }
+  // Eigen (sub)domein: haal de // weg en pas de hostnaam aan.
+  // ,"routes": [
+  //   { "pattern": "scan.metfluks.nl", "custom_domain": true }
+  // ]
+}
