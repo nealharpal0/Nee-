@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-scan voor het MKB | fluks</title>
+<meta name="description" content="Beantwoord 10 korte vragen en zie hoeveel tijd automatisering jouw bedrijf kan besparen. Je antwoorden blijven in je browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #12306b;
+    --sky: #4fb3e8;
+    --sky-soft: #ddf0fb;
+    --mist: #f3f5f8;
+    --surface: #ffffff;
+    --ink-muted: #56627a;
+    --line: #dde3ec;
+    --focus: 0 0 0 2px #ffffff, 0 0 0 4px #12306b;
+    --r-input: 6px;
+    --r-card: 12px;
+    --r-pill: 9999px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--mist);
+    color: var(--navy);
+    font-family: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+  }
+  h1, h2, h3 { font-weight: 600; margin: 0; }
+  h1 { font-size: 28px; line-height: 36px; letter-spacing: -0.4px; }
+  h2 { font-size: 22px; line-height: 30px; }
+  h3 { font-size: 18px; line-height: 26px; }
+  p { margin: 0; }
+  a { color: var(--navy); }
+  :focus { outline: none; }
+  :focus-visible { box-shadow: var(--focus); border-radius: 4px; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .skip {
+    position: absolute; left: 16px; top: -48px; background: var(--surface);
+    padding: 8px 16px; border-radius: var(--r-card); z-index: 10;
+  }
+  .skip:focus { top: 12px; }
+
+  /* Layout */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--line); }
+  .site-header .inner { max-width: 720px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { display: block; width: 104px; height: auto; }
+  .tag { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--ink-muted); }
+  main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); padding: 24px 20px; }
+  .stack > * + * { margin-top: 16px; }
+  .muted { color: var(--ink-muted); }
+  .small { font-size: 14px; line-height: 22px; }
+
+  /* Pill */
+  .pill { display: inline-block; background: var(--sky-soft); color: var(--navy); font-weight: 500; font-size: 14px; line-height: 20px; padding: 4px 12px; border-radius: var(--r-pill); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 48px; padding: 12px 20px; border-radius: var(--r-card);
+    font: inherit; font-weight: 500; text-decoration: none; cursor: pointer;
+    border: 2px solid var(--navy);
+  }
+  .btn-primary { background: var(--navy); color: #ffffff; }
+  .btn-primary:hover { background: #0c2350; border-color: #0c2350; }
+  .btn-secondary { background: var(--surface); color: var(--navy); }
+  .btn-secondary:hover { background: var(--mist); }
+  .btn:focus-visible { box-shadow: var(--focus); border-radius: var(--r-card); }
+  .btn[aria-disabled="true"] { opacity: 1; background: var(--mist); color: var(--ink-muted); border-color: var(--line); cursor: not-allowed; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn-row .btn { flex: 1 1 160px; }
+
+  /* Intro */
+  .intro-points { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .intro-points li { display: flex; gap: 12px; align-items: flex-start; }
+  .dot { flex: 0 0 12px; height: 12px; margin-top: 7px; border-radius: var(--r-pill); background: var(--sky); }
+
+  /* Progress */
+  .progress-wrap { margin-bottom: 16px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--ink-muted); margin-bottom: 8px; }
+  .progress { height: 8px; background: var(--line); border-radius: var(--r-pill); overflow: hidden; }
+  .progress-bar { height: 100%; width: 0; background: var(--navy); border-radius: var(--r-pill); transition: width .25s ease; }
+  @media (prefers-reduced-motion: reduce) { .progress-bar { transition: none; } }
+
+  /* Question */
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  legend { padding: 0; font-weight: 600; font-size: 22px; line-height: 30px; }
+  .hint { margin-top: 4px; color: var(--ink-muted); }
+  .options { display: grid; gap: 12px; margin-top: 20px; }
+  .option { position: relative; }
+  .option input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .option label {
+    display: flex; align-items: center; gap: 12px; min-height: 56px;
+    padding: 12px 16px; border: 1px solid var(--ink-muted); border-radius: var(--r-card);
+    background: var(--surface); cursor: pointer; font-weight: 400;
+  }
+  .option label:hover { background: var(--mist); }
+  .mark { flex: 0 0 20px; width: 20px; height: 20px; border: 2px solid var(--ink-muted); background: var(--surface); display: inline-flex; align-items: center; justify-content: center; }
+  .option input[type="radio"] + label .mark { border-radius: var(--r-pill); }
+  .option input[type="checkbox"] + label .mark { border-radius: 4px; }
+  .option input:checked + label { background: var(--sky-soft); border: 2px solid var(--navy); padding: 11px 15px; }
+  .option input:checked + label .mark { border-color: var(--navy); background: var(--navy); }
+  .option input[type="radio"]:checked + label .mark::after { content: ""; width: 8px; height: 8px; border-radius: var(--r-pill); background: #ffffff; }
+  .option input[type="checkbox"]:checked + label .mark::after { content: ""; width: 10px; height: 6px; border-left: 2px solid #ffffff; border-bottom: 2px solid #ffffff; transform: translateY(-1px) rotate(-45deg); }
+  .option input:focus-visible + label { box-shadow: var(--focus); }
+  .opt-text { display: block; }
+  .opt-sub { display: block; font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  .error { margin-top: 16px; color: #a3122a; font-weight: 500; }
+  .nav { display: flex; gap: 12px; margin-top: 24px; }
+  .nav .btn-primary { flex: 1 1 auto; }
+  .nav .btn-secondary { flex: 0 0 auto; }
+
+  /* Result */
+  .result-hero { background: var(--sky-soft); border-radius: var(--r-card); padding: 20px; }
+  .hero-number { font-size: 36px; line-height: 44px; font-weight: 600; letter-spacing: -0.5px; margin-top: 4px; }
+  .label { font-weight: 500; font-size: 14px; line-height: 20px; }
+  .top3 { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; counter-reset: top; }
+  .top3 li { border: 1px solid var(--line); border-radius: var(--r-card); padding: 16px; display: grid; grid-template-columns: 32px 1fr; gap: 4px 12px; }
+  .rank { grid-row: span 3; width: 32px; height: 32px; border-radius: var(--r-pill); background: var(--navy); color: #ffffff; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+  .top3 .hours { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--ink-muted); }
+  details { border: 1px solid var(--line); border-radius: var(--r-card); background: var(--mist); }
+  summary { cursor: pointer; padding: 16px; font-weight: 500; min-height: 48px; list-style-position: inside; }
+  summary:focus-visible { box-shadow: var(--focus); border-radius: var(--r-card); }
+  .details-body { padding: 0 16px 16px; }
+  .details-body ol, .details-body ul { margin: 0; padding-left: 20px; }
+  .table-wrap { overflow-x: auto; margin-top: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 20px; background: var(--surface); }
+  caption { text-align: left; font-weight: 500; padding-bottom: 8px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 500; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  .contact { background: var(--surface); border: 2px solid var(--navy); border-radius: var(--r-card); padding: 20px; }
+  .todo-note { background: var(--mist); border: 1px dashed var(--ink-muted); border-radius: var(--r-input); padding: 8px 12px; font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+
+  @media (max-width: 639px) {
+    .resp thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .resp tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .resp th, .resp td { display: block; border: 0; padding: 4px 8px; }
+    .resp td.num { display: flex; justify-content: space-between; gap: 12px; text-align: right; }
+    .resp td.num::before { content: attr(data-label); color: var(--ink-muted); text-align: left; }
+    .resp td.leeg { display: none; }
+    .card { padding: 20px 16px; }
+    .hero-number { font-size: 30px; line-height: 38px; }
+    .top3 li { padding: 12px; grid-template-columns: 28px 1fr; gap: 4px 10px; }
+    .rank { width: 28px; height: 28px; }
+  }
+  .form { display: grid; gap: 16px; }
+  .field { display: grid; gap: 4px; }
+  .field label { font-weight: 500; }
+  .field input, .field textarea {
+    font: inherit; color: var(--navy); background: var(--surface);
+    border: 1px solid var(--ink-muted); border-radius: var(--r-input);
+    padding: 12px; min-height: 48px; width: 100%;
+  }
+  .field textarea { min-height: 120px; resize: vertical; }
+  .field input:focus-visible, .field textarea:focus-visible { box-shadow: var(--focus); border-color: var(--navy); }
+  [hidden] { display: none !important; }
+  .gotcha { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .status-ok { background: var(--sky-soft); border-radius: var(--r-card); padding: 16px; }
+  .privacy { max-width: 720px; margin: 0 auto; padding: 0 16px 40px; font-size: 14px; line-height: 22px; color: var(--ink-muted); }
+  .privacy p + p { margin-top: 8px; }
+
+  @media (min-width: 640px) {
+    main { padding-top: 40px; }
+    .card { padding: 32px; }
+    h1 { font-size: 34px; line-height: 44px; }
+    .hero-number { font-size: 44px; line-height: 52px; }
+    .logo { width: 120px; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#app">Naar de scan</a>
+<header class="site-header">
+  <div class="inner">
+    <a href="/" aria-label="fluks, naar de homepage">
+      <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" role="img" aria-hidden="true" focusable="false"><g transform="translate(10,10)"><circle cx="17" cy="50" r="4" fill="#12306B"/><circle cx="31" cy="50" r="6" fill="#12306B"/><circle cx="48" cy="50" r="9" fill="#12306B"/><circle cx="73" cy="50" r="15" fill="#4FB3E8"/></g><text x="130" y="81" font-family="Lexend, sans-serif" font-weight="600" font-size="80" letter-spacing="-1.6" fill="#12306B">fluks</text></svg>
+    </a>
+    <span class="tag">AI-scan</span>
+  </div>
+</header>
+
+<main id="app" tabindex="-1">
+  <noscript><div class="card"><p>Deze scan werkt met JavaScript. Zet JavaScript aan om de vragen te zien.</p></div></noscript>
+  <div id="screen" aria-live="off"></div>
+</main>
+
+<footer class="privacy">
+  <p><strong>Privacy:</strong> je antwoorden blijven in je eigen browser. Er is geen tracking, er worden geen cookies geplaatst en er wordt niets opgeslagen. Sluit je dit tabblad, dan zijn je antwoorden weg.</p>
+  <p>Alleen als je zelf het formulier "Plan een kennismaking" verstuurt, gaan je naam, bedrijf, contactgegevens en je uitkomst per e-mail naar fluks. Het lettertype Lexend wordt geladen via Google Fonts. Meer in de <a href="/privacy.html">privacyverklaring</a>.</p>
+</footer>
+
+<script id="rekenmodel">
+/* =====================================================================
+   REKENMODEL EN AANNAMES  (fluks AI-scan)
+   ---------------------------------------------------------------------
+   Alle kentallen hieronder zijn SCHATTINGEN, tenzij anders vermeld.
+   Onderbouwing en bronnen: zie onderbouwing.md (zelfde map).
+
+   Werkwijze per onderdeel (module):
+     handmatige uren per week  = volume x minuten per stuk / 60
+     besparing (laag - hoog)   = handmatige uren x automatiseerbaar aandeel (laag - hoog)
+   Totaal = som van alle modules, daarna begrensd:
+     hoog <= CAP   (CAP = fte x werkuren per fte x max aandeel werktijd)
+     laag <= CAP x 0,6
+   Deze begrenzing voorkomt onrealistische uitkomsten bij extreme antwoorden.
+   ===================================================================== */
+var AIScanModel = (function () {
+  "use strict";
+
+  var CONFIG = {
+    werkurenPerFte: 36,          // schatting: gangbare werkweek MKB
+    maxAandeelWerktijd: 0.35,    // schatting: hoogstens 35% van alle werktijd is besparing
+    laagCapFactor: 0.6,          // ondergrens mag hoogstens 60% van de cap zijn
+    wekenPerMaand: 4.33,         // 52 weken / 12 maanden
+    werkdagenPerWeek: 5,
+
+    // Minuten handwerk per afspraak/order, afhankelijk van hoe die binnenkomt (schatting)
+    kanaalMinuten: { tel: 8, chat: 5, form: 3, online: 1 },
+
+    // Automatiseerbaar aandeel van het handwerk [laag, hoog] (schatting, zie onderbouwing.md)
+    aandeel: {
+      intake:     [0.35, 0.65],
+      vragen:     [0.25, 0.50],
+      offertes:   [0.30, 0.60],
+      facturatie: [0.40, 0.70],
+      planning:   [0.20, 0.45],
+      data:       [0.40, 0.70]
+    },
+    dataBonusKoppelen: 0.05,     // extra aandeel data-invoer als er 2+ pakketten zijn die je kunt koppelen
+
+    offertePakketFactor: 0.5,    // met offertesoftware kost een offerte de helft van de tijd (schatting)
+    factuurMinuten: { zonderPakket: 10, metPakket: 6 },  // incl. betalingsherinnering (schatting)
+
+    // Planning: uren per week = basis x fte^0,75 x sectorfactor (schatting)
+    planningBasis: { papier: 0.8, excel: 0.5, software: 0.25 },
+    planningExponent: 0.75,
+
+    // Sectorkentallen (schatting)
+    sectoren: {
+      afspraak:  { intakeFactor: 1.0, vraagMinuten: 4, offerteMinuten: 20, planningFactor: 1.0 },
+      dienst:    { intakeFactor: 1.5, vraagMinuten: 4, offerteMinuten: 45, planningFactor: 1.0 },
+      tuinbouw:  { intakeFactor: 1.2, vraagMinuten: 4, offerteMinuten: 25, planningFactor: 1.2 },
+      logistiek: { intakeFactor: 1.3, vraagMinuten: 5, offerteMinuten: 30, planningFactor: 1.5 }
+    }
+  };
+
+  /* ---------------- Vragen en antwoordopties ----------------
+     'v' is de waarde waarmee gerekend wordt (middelpunt van de bandbreedte). */
+  var SECTOR_OPTIES = [
+    { id: "afspraak",  label: "Afspraakbedrijf", sub: "Bijvoorbeeld autodetailer, kapper, trimsalon of garage" },
+    { id: "dienst",    label: "MKB-dienstverlener", sub: "Bijvoorbeeld installateur, aannemer, schoonmaak of administratiekantoor" },
+    { id: "tuinbouw",  label: "Tuinbouw", sub: "Bijvoorbeeld kweker, teler of toeleverancier in het Westland" },
+    { id: "logistiek", label: "Logistiek en transport", sub: "Bijvoorbeeld vervoerder, koerier of warehousing" }
+  ];
+
+  var WOORDEN = {
+    afspraak:  { item: "afspraken", itemEnk: "afspraak", klant: "klanten" },
+    dienst:    { item: "opdrachten", itemEnk: "opdracht", klant: "klanten" },
+    tuinbouw:  { item: "orders", itemEnk: "order", klant: "afnemers" },
+    logistiek: { item: "transportopdrachten", itemEnk: "transportopdracht", klant: "opdrachtgevers" }
+  };
+
+  var VRAGEN = [
+    { id: "sector", type: "radio", vraag: function () { return "In welke sector werk je?"; },
+      hint: function () { return "De volgende vragen passen zich aan je sector aan."; },
+      opties: function () { return SECTOR_OPTIES; } },
+
+    { id: "medewerkers", type: "radio",
+      vraag: function () { return "Met hoeveel mensen werk je, jezelf meegeteld?"; },
+      hint: function () { return "Reken in personen die vast meewerken, ook parttimers."; },
+      opties: function () { return [
+        { id: "m1", label: "Alleen ik", v: 1 },
+        { id: "m2", label: "2 tot 5", v: 3.5 },
+        { id: "m3", label: "6 tot 15", v: 10 },
+        { id: "m4", label: "16 tot 50", v: 28 }
+      ]; } },
+
+    { id: "intake", type: "radio",
+      vraag: function (s) { return {
+        afspraak: "Hoeveel afspraken maak je gemiddeld per week?",
+        dienst: "Hoeveel nieuwe opdrachten of werkbonnen komen er per week binnen?",
+        tuinbouw: "Hoeveel orders of bestellingen verwerk je per week?",
+        logistiek: "Hoeveel transportopdrachten verwerk je per week?"
+      }[s]; },
+      hint: function () { return "Een schatting is genoeg."; },
+      opties: function (s) { return {
+        afspraak:  [{ id: "i1", label: "1 tot 15", v: 8 },  { id: "i2", label: "16 tot 40", v: 28 }, { id: "i3", label: "41 tot 100", v: 70 }, { id: "i4", label: "Meer dan 100", v: 130 }],
+        dienst:    [{ id: "i1", label: "1 tot 5", v: 3 },   { id: "i2", label: "6 tot 15", v: 10 },  { id: "i3", label: "16 tot 40", v: 28 },  { id: "i4", label: "Meer dan 40", v: 60 }],
+        tuinbouw:  [{ id: "i1", label: "1 tot 10", v: 5 },  { id: "i2", label: "11 tot 30", v: 20 }, { id: "i3", label: "31 tot 80", v: 55 },  { id: "i4", label: "Meer dan 80", v: 120 }],
+        logistiek: [{ id: "i1", label: "1 tot 20", v: 10 }, { id: "i2", label: "21 tot 60", v: 40 }, { id: "i3", label: "61 tot 150", v: 100 }, { id: "i4", label: "Meer dan 150", v: 200 }]
+      }[s]; } },
+
+    { id: "kanaal", type: "radio",
+      vraag: function (s) { return "Hoe komen " + WOORDEN[s].item + " meestal binnen?"; },
+      hint: function () { return "Kies wat het vaakst voorkomt."; },
+      opties: function (s) {
+        var online = {
+          afspraak: "Via online boeken dat direct in mijn agenda komt",
+          dienst: "Via een online aanvraag die direct in mijn systeem komt",
+          tuinbouw: "Via EDI, een klantportaal of webshop die direct doorloopt",
+          logistiek: "Via EDI, een klantportaal of TMS dat direct doorloopt"
+        }[s];
+        var form = (s === "tuinbouw" || s === "logistiek")
+          ? "Via een (PDF- of Excel-)bestelformulier dat ik overtyp"
+          : "Via een formulier op de website dat ik overneem";
+        return [
+          { id: "tel", label: "Vooral telefonisch" },
+          { id: "chat", label: "Via e-mail of WhatsApp" },
+          { id: "form", label: form },
+          { id: "online", label: online }
+        ];
+      } },
+
+    { id: "vragen", type: "radio",
+      vraag: function (s) { return "Hoeveel vragen van " + WOORDEN[s].klant + " krijg je per dag?"; },
+      hint: function (s) { return s === "logistiek" || s === "tuinbouw"
+        ? "Denk aan vragen over levertijden, status en beschikbaarheid, via telefoon, mail of WhatsApp."
+        : "Denk aan vragen over prijzen, beschikbaarheid en openingstijden, via telefoon, mail of WhatsApp."; },
+      opties: function () { return [
+        { id: "q1", label: "0 tot 5", v: 3 },
+        { id: "q2", label: "6 tot 15", v: 10 },
+        { id: "q3", label: "16 tot 30", v: 22 },
+        { id: "q4", label: "Meer dan 30", v: 40 }
+      ]; } },
+
+    { id: "offertes", type: "radio",
+      vraag: function (s) { return s === "logistiek"
+        ? "Hoeveel prijsaanvragen of ritoffertes maak je per week?"
+        : s === "afspraak" ? "Hoe vaak geef je per week een prijsopgave of offerte op maat?"
+        : "Hoeveel offertes maak je per week?"; },
+      hint: function () { return "Standaardprijzen van een prijslijst tellen niet mee."; },
+      opties: function () { return [
+        { id: "o0", label: "Geen", v: 0 },
+        { id: "o1", label: "1 tot 5", v: 3 },
+        { id: "o2", label: "6 tot 15", v: 10 },
+        { id: "o3", label: "Meer dan 15", v: 22 }
+      ]; } },
+
+    { id: "facturen", type: "radio",
+      vraag: function () { return "Hoeveel facturen verstuur je per maand?"; },
+      hint: function () { return "Inclusief betaalverzoeken en kassabonnen die je achteraf mailt."; },
+      opties: function () { return [
+        { id: "f1", label: "0 tot 20", v: 10 },
+        { id: "f2", label: "21 tot 60", v: 40 },
+        { id: "f3", label: "61 tot 150", v: 100 },
+        { id: "f4", label: "Meer dan 150", v: 220 }
+      ]; } },
+
+    { id: "planning", type: "radio",
+      vraag: function (s) { return {
+        afspraak: "Hoe houd je je agenda en de bezetting bij?",
+        dienst: "Hoe plan je mensen en klussen in?",
+        tuinbouw: "Hoe plan je oogst, productie en levering?",
+        logistiek: "Hoe plan je ritten en chauffeurs?"
+      }[s]; },
+      hint: function () { return "Kies wat het meest op jouw situatie lijkt."; },
+      opties: function () { return [
+        { id: "papier", label: "Op papier, whiteboard, mondeling of via WhatsApp" },
+        { id: "excel", label: "In Excel of een gewone agenda" },
+        { id: "software", label: "In planningssoftware" }
+      ]; } },
+
+    { id: "data", type: "radio",
+      vraag: function () { return "Hoeveel uur per week gaat er in overtypen van gegevens?"; },
+      hint: function (s) { return {
+        afspraak: "Bijvoorbeeld klantgegevens van papier of WhatsApp in je systeem zetten.",
+        dienst: "Bijvoorbeeld werkbonnen, uren of bonnetjes in je administratie zetten.",
+        tuinbouw: "Bijvoorbeeld orders, leverbonnen of veilinggegevens in Excel of je ERP zetten.",
+        logistiek: "Bijvoorbeeld vrachtbrieven, CMR's of orders in je TMS of administratie zetten."
+      }[s]; },
+      opties: function () { return [
+        { id: "d0", label: "Vrijwel niets", v: 0 },
+        { id: "d1", label: "Minder dan 2 uur", v: 1 },
+        { id: "d2", label: "2 tot 5 uur", v: 3.5 },
+        { id: "d3", label: "5 tot 10 uur", v: 7.5 },
+        { id: "d4", label: "Meer dan 10 uur", v: 14 }
+      ]; } },
+
+    { id: "software", type: "checkbox",
+      vraag: function () { return "Welke software gebruik je al?"; },
+      hint: function () { return "Kies alles wat van toepassing is."; },
+      opties: function (s) { return [
+        { id: "boekhouding", label: "Boekhoud- of factuurprogramma" },
+        { id: "offerte", label: "Offerteprogramma" },
+        { id: "crm", label: "Klantenbestand of CRM" },
+        { id: "systeem", label: s === "afspraak" ? "Online boekingssysteem" : s === "logistiek" ? "TMS of klantportaal" : s === "tuinbouw" ? "ERP, webshop of klantportaal" : "Webshop of klantportaal" },
+        { id: "geen", label: "Geen van deze, vooral papier en Excel", exclusief: true }
+      ]; } }
+  ];
+
+  /* ---------------- Automatiseringen per sector ---------------- */
+  var AUTOMATISERINGEN = {
+    afspraak: {
+      intake: ["Online afspraken laten boeken", "Klanten kiezen zelf een vrij tijdstip op je site of via een link, zodat jij niet meer hoeft te bellen en appen om iets te plannen."],
+      vragen: ["Automatische herinneringen en reviewverzoeken", "Klanten krijgen vooraf vanzelf een herinnering en achteraf een verzoek om een review, en standaardvragen worden met vaste antwoorden afgehandeld."],
+      offertes: ["Prijsindicatie op je website", "Een klant kiest dienst en opties en ziet direct een richtprijs; jij hoeft alleen nog te bevestigen."],
+      facturatie: ["Factuur of betaallink na elke afspraak", "Na afloop gaat de factuur of betaallink automatisch naar de klant, met een herinnering als er niet betaald is."],
+      planning: ["Agenda met vaste buffers en bezetting", "De agenda houdt rekening met behandelduur, pauzes en wie er werkt, zodat dubbele boekingen en gaten verdwijnen."],
+      data: ["Klantgegevens één keer vastleggen", "Gegevens uit de boeking komen direct in je klantenbestand en factuur, zonder overtypen."]
+    },
+    dienst: {
+      intake: ["Slim aanvraagformulier", "Een online formulier vraagt meteen de juiste gegevens en foto's uit en zet de aanvraag direct klaar in je systeem."],
+      vragen: ["Automatische statusberichten aan klanten", "Klanten krijgen vanzelf bericht bij inplannen, onderweg en afronding, zodat ze minder hoeven te bellen."],
+      offertes: ["Offertes uit vaste bouwstenen", "Offertes worden samengesteld uit je eigen prijzen en teksten en automatisch opgevolgd als de klant niet reageert."],
+      facturatie: ["Factuur direct uit de werkbon", "Uren en materiaal op de werkbon gaan automatisch naar een factuur in je boekhoudprogramma."],
+      planning: ["Planning gekoppeld aan aanvragen", "Nieuwe opdrachten komen in een gedeelde planning met beschikbaarheid van je mensen, in plaats van op een whiteboard."],
+      data: ["Bonnen en werkbonnen automatisch verwerken", "Bonnetjes, uren en werkbonnen worden uitgelezen en in je administratie gezet in plaats van overgetypt."]
+    },
+    tuinbouw: {
+      intake: ["Orders automatisch inlezen", "Bestellingen uit e-mail, PDF of Excel worden uitgelezen en als order klaargezet, zodat je ze alleen nog controleert."],
+      vragen: ["Automatische orderbevestiging en levermelding", "Afnemers krijgen vanzelf een bevestiging en een bericht bij verzending, wat vragen over status scheelt."],
+      offertes: ["Prijsopgaves uit actuele prijslijsten", "Prijsaanvragen worden beantwoord vanuit je actuele prijzen en beschikbaarheid in plaats van per stuk handmatig."],
+      facturatie: ["Facturen automatisch uit leveringen", "Na levering wordt de factuur automatisch gemaakt uit de order en leverbon, met herinnering bij te late betaling."],
+      planning: ["Productie- en leverplanning in één overzicht", "Orders, voorraad en leverdata komen samen in één planning die zichzelf bijwerkt."],
+      data: ["Koppeling tussen order, voorraad en administratie", "Gegevens hoeven nog maar één keer ingevoerd te worden en lopen door naar voorraad, transport en boekhouding."]
+    },
+    logistiek: {
+      intake: ["Transportopdrachten automatisch inlezen", "Opdrachten uit e-mail, PDF of Excel worden uitgelezen en direct als rit klaargezet in je planning of TMS."],
+      vragen: ["Automatische track-and-trace-berichten", "Opdrachtgevers krijgen vanzelf bericht bij laden, onderweg en afleveren, zodat \"waar is mijn zending\"-vragen afnemen."],
+      offertes: ["Ritprijzen automatisch berekenen", "Prijsaanvragen krijgen snel een prijs op basis van afstand, gewicht en jouw tarieven."],
+      facturatie: ["Factureren na afgeleverde rit", "Zodra de aflevering bevestigd is, gaat de factuur met afleverbewijs automatisch de deur uit."],
+      planning: ["Ritplanning met ondersteuning", "Ritten worden voorgesteld op basis van capaciteit en tijdvensters, jij controleert en past aan."],
+      data: ["Vrachtbrieven en CMR's digitaal verwerken", "Papieren of gescande documenten worden uitgelezen en gekoppeld aan de rit en de factuur."]
+    }
+  };
+
+  var MODULE_NAMEN = {
+    intake: "Binnenkomst van afspraken en orders",
+    vragen: "Vragen van klanten",
+    offertes: "Offertes en prijsopgaves",
+    facturatie: "Facturatie en herinneringen",
+    planning: "Planning",
+    data: "Overtypen van gegevens"
+  };
+
+  /* ---------------- Hulpfuncties ---------------- */
+  function vraagById(id) {
+    for (var i = 0; i < VRAGEN.length; i++) { if (VRAGEN[i].id === id) return VRAGEN[i]; }
+    throw new Error("Onbekende vraag: " + id);
+  }
+  function optie(vraagId, sector, optieId) {
+    var opts = vraagById(vraagId).opties(sector);
+    for (var i = 0; i < opts.length; i++) { if (opts[i].id === optieId) return opts[i]; }
+    throw new Error("Onbekende optie " + optieId + " bij vraag " + vraagId);
+  }
+  function rond(x, stap) { return Math.round(x / stap) * stap; }
+
+  function bandbreedteTekst(laag, hoog) {
+    if (!(hoog >= 1)) return { laag: 0, hoog: 1, tekst: "minder dan 1 uur per week" };
+    var stap = hoog >= 20 ? 5 : 1;
+    var l = Math.max(0, Math.floor(laag / stap) * stap);
+    var h = Math.ceil(hoog / stap) * stap;
+    if (h <= l) h = l + stap;
+    return { laag: l, hoog: h, tekst: l === 0 ? "tot " + h + " uur per week" : l + "–" + h + " uur per week" };
+  }
+
+  /* ---------------- Berekening ---------------- */
+  function calculate(antwoorden) {
+    var a = antwoorden;
+    var sector = a.sector;
+    var S = CONFIG.sectoren[sector];
+    if (!S) throw new Error("Onbekende sector: " + sector);
+
+    var fte = optie("medewerkers", sector, a.medewerkers).v;
+    var intakePerWeek = optie("intake", sector, a.intake).v;
+    var kanaalMin = CONFIG.kanaalMinuten[optie("kanaal", sector, a.kanaal).id];
+    var vragenPerDag = optie("vragen", sector, a.vragen).v;
+    var offertesPerWeek = optie("offertes", sector, a.offertes).v;
+    var facturenPerMaand = optie("facturen", sector, a.facturen).v;
+    var planningId = optie("planning", sector, a.planning).id;
+    var dataUren = optie("data", sector, a.data).v;
+    var sw = Array.isArray(a.software) ? a.software.slice() : [];
+    if (sw.indexOf("geen") !== -1) sw = [];
+    var heeft = function (x) { return sw.indexOf(x) !== -1; };
+    var aantalPakketten = sw.length;
+
+    var A = CONFIG.aandeel;
+    var modules = [];
+    function add(id, uren, aandeel, toelichting) {
+      modules.push({
+        id: id, naam: MODULE_NAMEN[id], handmatig: uren,
+        aandeelLaag: aandeel[0], aandeelHoog: aandeel[1],
+        laag: uren * aandeel[0], hoog: uren * aandeel[1],
+        midden: uren * (aandeel[0] + aandeel[1]) / 2,
+        toelichting: toelichting,
+        titel: AUTOMATISERINGEN[sector][id][0],
+        uitleg: AUTOMATISERINGEN[sector][id][1]
+      });
+    }
+
+    // 1. Binnenkomst afspraken/orders
+    var intakeAandeel = A.intake;
+    if (heeft("systeem")) intakeAandeel = [A.intake[0] * 0.5, A.intake[1] * 0.5]; // al deels online
+    add("intake", intakePerWeek * kanaalMin * S.intakeFactor / 60, intakeAandeel,
+      intakePerWeek + " " + WOORDEN[sector].item + " x " + (kanaalMin * S.intakeFactor).toFixed(1).replace(".", ",") + " min");
+
+    // 2. Klantvragen
+    add("vragen", vragenPerDag * CONFIG.werkdagenPerWeek * S.vraagMinuten / 60, A.vragen,
+      vragenPerDag + " vragen/dag x " + CONFIG.werkdagenPerWeek + " dagen x " + S.vraagMinuten + " min");
+
+    // 3. Offertes
+    var offMin = S.offerteMinuten * (heeft("offerte") ? CONFIG.offertePakketFactor : 1);
+    add("offertes", offertesPerWeek * offMin / 60, A.offertes,
+      offertesPerWeek + " offertes/week x " + String(offMin).replace(".", ",") + " min");
+
+    // 4. Facturatie
+    var fMin = heeft("boekhouding") ? CONFIG.factuurMinuten.metPakket : CONFIG.factuurMinuten.zonderPakket;
+    add("facturatie", (facturenPerMaand / CONFIG.wekenPerMaand) * fMin / 60, A.facturatie,
+      facturenPerMaand + " facturen/maand / 4,33 x " + fMin + " min");
+
+    // 5. Planning
+    var planUren = CONFIG.planningBasis[planningId] * Math.pow(fte, CONFIG.planningExponent) * S.planningFactor;
+    add("planning", planUren, A.planning,
+      "basis " + String(CONFIG.planningBasis[planningId]).replace(".", ",") + " u x " + fte.toString().replace(".", ",") + " fte^0,75 x " + String(S.planningFactor).replace(".", ","));
+
+    // 6. Data-invoer
+    var dataAandeel = aantalPakketten >= 2
+      ? [A.data[0] + CONFIG.dataBonusKoppelen, A.data[1] + CONFIG.dataBonusKoppelen]
+      : A.data;
+    add("data", dataUren, dataAandeel, "opgegeven " + String(dataUren).replace(".", ",") + " uur/week");
+
+    var somLaag = 0, somHoog = 0;
+    modules.forEach(function (m) { somLaag += m.laag; somHoog += m.hoog; });
+
+    var cap = fte * CONFIG.werkurenPerFte * CONFIG.maxAandeelWerktijd;
+    var hoog = Math.min(somHoog, cap);
+    var laag = Math.min(somLaag, cap * CONFIG.laagCapFactor);
+    var begrensd = somHoog > cap || somLaag > cap * CONFIG.laagCapFactor;
+
+    var gesorteerd = modules.slice().sort(function (x, y) { return y.midden - x.midden; });
+    var top3 = gesorteerd.filter(function (m) { return m.midden >= 0.25; }).slice(0, 3);
+
+    return {
+      sector: sector,
+      modules: modules,
+      somLaag: somLaag, somHoog: somHoog,
+      laag: laag, hoog: hoog,
+      cap: cap, begrensd: begrensd,
+      weergave: bandbreedteTekst(laag, hoog),
+      top3: top3
+    };
+  }
+
+  return {
+    CONFIG: CONFIG, VRAGEN: VRAGEN, SECTOR_OPTIES: SECTOR_OPTIES, WOORDEN: WOORDEN,
+    AUTOMATISERINGEN: AUTOMATISERINGEN, MODULE_NAMEN: MODULE_NAMEN,
+    calculate: calculate, bandbreedteTekst: bandbreedteTekst, rond: rond
+  };
+})();
+</script>
+
+<script>
+/* =====================================================================
+   CONTACTGEGEVENS  --  TODO: vul in voordat je de pagina publiceert
+   ===================================================================== */
+var WHATSAPP_NUMBER = "";      // TODO (optioneel): WhatsApp-nummer zonder + of spaties, bijv. "316xxxxxxxx". Leeg = geen WhatsApp-knop.
+var CONTACT_ENDPOINT = "/api/contact";  // bestaand contactformulier van de site (Worker "fluks")
+
+/* =====================================================================
+   INTERFACE
+   ===================================================================== */
+(function () {
+  "use strict";
+  var M = AIScanModel;
+  var screen = document.getElementById("screen");
+  var state = { stap: -1, antwoorden: {} };   // stap -1 = intro, VRAGEN.length = uitkomst
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function nl(x, dec) { return x.toFixed(dec == null ? 1 : dec).replace(".", ","); }
+  function pct(x) { return Math.round(x * 100) + "%"; }
+
+  function focusHeading() {
+    var h = screen.querySelector("[data-focus]");
+    if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: false }); }
+    window.scrollTo(0, 0);
+  }
+
+  var eersteKeer = true;
+  function render() {
+    if (state.stap < 0) renderIntro();
+    else if (state.stap >= M.VRAGEN.length) renderUitkomst();
+    else renderVraag();
+    if (!eersteKeer) focusHeading();
+    eersteKeer = false;
+  }
+
+  function renderIntro() {
+    document.title = "AI-scan voor het MKB | fluks";
+    screen.innerHTML =
+      '<section class="card stack" aria-labelledby="intro-titel">' +
+        '<span class="pill">Ongeveer 2 minuten</span>' +
+        '<h1 id="intro-titel" data-focus>Hoeveel tijd kan automatisering jouw bedrijf besparen?</h1>' +
+        '<p class="muted">Beantwoord 10 korte vragen over je bedrijf. Je krijgt direct een indicatie van de tijdwinst per week en de drie automatiseringen die bij jou het meeste opleveren.</p>' +
+        '<ul class="intro-points">' +
+          '<li><span class="dot" aria-hidden="true"></span><span>Afgestemd op je sector</span></li>' +
+          '<li><span class="dot" aria-hidden="true"></span><span>Met uitleg hoe we rekenen</span></li>' +
+          '<li><span class="dot" aria-hidden="true"></span><span>Je antwoorden blijven in je browser</span></li>' +
+        '</ul>' +
+        '<div><button type="button" class="btn btn-primary" id="start">Start de scan</button></div>' +
+      '</section>';
+    document.getElementById("start").addEventListener("click", function () { state.stap = 0; render(); });
+  }
+
+  function renderVraag() {
+    var q = M.VRAGEN[state.stap];
+    var sector = state.antwoorden.sector || "afspraak";
+    var totaal = M.VRAGEN.length;
+    var nr = state.stap + 1;
+    var opties = q.opties(sector);
+    var huidig = state.antwoorden[q.id];
+    var naam = "q-" + q.id;
+    document.title = "Vraag " + nr + " van " + totaal + " | AI-scan | fluks";
+
+    var html =
+      '<div class="progress-wrap">' +
+        '<div class="progress-label"><span>Vraag ' + nr + ' van ' + totaal + '</span><span>' + Math.round((nr - 1) / totaal * 100) + '%</span></div>' +
+        '<div class="progress" role="progressbar" aria-label="Voortgang" aria-valuemin="0" aria-valuemax="' + totaal + '" aria-valuenow="' + (nr - 1) + '" aria-valuetext="Vraag ' + nr + ' van ' + totaal + '">' +
+          '<div class="progress-bar" style="width:' + ((nr - 1) / totaal * 100) + '%"></div></div>' +
+      '</div>' +
+      '<form class="card" id="vraag-form" novalidate>' +
+        '<fieldset aria-describedby="hint-' + q.id + '">' +
+          '<legend data-focus>' + esc(q.vraag(sector)) + '</legend>' +
+          '<p class="hint" id="hint-' + q.id + '">' + esc(q.hint(sector)) + '</p>' +
+          '<div class="options">';
+    opties.forEach(function (o, i) {
+      var id = naam + "-" + o.id;
+      var checked = q.type === "checkbox"
+        ? (Array.isArray(huidig) && huidig.indexOf(o.id) !== -1)
+        : huidig === o.id;
+      html +=
+        '<div class="option">' +
+          '<input type="' + q.type + '" name="' + naam + '" id="' + id + '" value="' + esc(o.id) + '"' + (checked ? " checked" : "") + (o.exclusief ? ' data-exclusief="1"' : "") + '>' +
+          '<label for="' + id + '"><span class="mark" aria-hidden="true"></span><span><span class="opt-text">' + esc(o.label) + '</span>' +
+          (o.sub ? '<span class="opt-sub">' + esc(o.sub) + '</span>' : "") + '</span></label>' +
+        '</div>';
+    });
+    html +=
+          '</div>' +
+        '</fieldset>' +
+        '<p class="error" id="fout" role="alert" hidden></p>' +
+        '<div class="nav">' +
+          '<button type="button" class="btn btn-secondary" id="terug">Terug</button>' +
+          '<button type="submit" class="btn btn-primary">' + (nr === totaal ? "Bekijk uitkomst" : "Volgende") + '</button>' +
+        '</div>' +
+      '</form>';
+    screen.innerHTML = html;
+
+    var form = document.getElementById("vraag-form");
+    var fout = document.getElementById("fout");
+
+    if (q.type === "checkbox") {
+      form.addEventListener("change", function (e) {
+        var t = e.target;
+        if (!t.checked) return;
+        var boxes = form.querySelectorAll('input[type="checkbox"]');
+        boxes.forEach(function (b) {
+          if (t.dataset.exclusief && b !== t) b.checked = false;
+          if (!t.dataset.exclusief && b.dataset.exclusief) b.checked = false;
+        });
+      });
+    }
+    form.addEventListener("change", function () { fout.hidden = true; });
+
+    document.getElementById("terug").addEventListener("click", function () {
+      state.stap -= 1; render();
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (q.type === "checkbox") {
+        var gekozen = Array.prototype.map.call(form.querySelectorAll("input:checked"), function (b) { return b.value; });
+        if (!gekozen.length) { toonFout("Kies minstens één optie. Gebruik je niets hiervan, kies dan de laatste optie."); return; }
+        state.antwoorden[q.id] = gekozen;
+      } else {
+        var r = form.querySelector("input:checked");
+        if (!r) { toonFout("Kies een antwoord om verder te gaan."); return; }
+        if (q.id === "sector" && state.antwoorden.sector && state.antwoorden.sector !== r.value) {
+          // Andere sector: opties kunnen anders zijn, eerdere antwoorden wissen.
+          state.antwoorden = {};
+        }
+        state.antwoorden[q.id] = r.value;
+      }
+      state.stap += 1;
+      render();
+    });
+
+    function toonFout(t) {
+      fout.textContent = t; fout.hidden = false;
+      var first = form.querySelector("input"); if (first) first.focus();
+    }
+  }
+
+  function renderUitkomst() {
+    var r = M.calculate(state.antwoorden);
+    var sectorLabel = M.SECTOR_OPTIES.filter(function (s) { return s.id === r.sector; })[0].label;
+    document.title = "Je uitkomst | AI-scan | fluks";
+
+    var top = r.top3.map(function (m, i) {
+      var b = M.bandbreedteTekst(m.laag, m.hoog);
+      return '<li><span class="rank" aria-hidden="true">' + (i + 1) + '</span>' +
+        '<h3><span class="sr-only">' + (i + 1) + '. </span>' + esc(m.titel) + '</h3>' +
+        '<p>' + esc(m.uitleg) + '</p>' +
+        '<p class="hours">Indicatie: ' + esc(b.tekst) + '</p></li>';
+    }).join("");
+    if (!r.top3.length) {
+      top = '<li><span class="rank" aria-hidden="true">1</span><h3>Je werkt al grotendeels geautomatiseerd</h3><p>Op basis van je antwoorden is er weinig handwerk over. Een gesprek kan laten zien of er nog kleinere winst te halen is.</p></li>';
+    }
+
+    var rijen = r.modules.map(function (m) {
+      return '<tr><th scope="row">' + esc(m.naam) + '<br><span class="muted">' + esc(m.toelichting) + '</span></th>' +
+        '<td class="num" data-label="Handwerk per week">' + nl(m.handmatig) + ' u</td>' +
+        '<td class="num" data-label="Te besparen">' + pct(m.aandeelLaag) + '–' + pct(m.aandeelHoog) + '</td>' +
+        '<td class="num" data-label="Besparing">' + nl(m.laag) + '–' + nl(m.hoog) + ' u</td></tr>';
+    }).join("");
+
+    var C = M.CONFIG;
+    var html =
+      '<section class="card stack" aria-labelledby="uitkomst-titel">' +
+        '<span class="pill">' + esc(sectorLabel) + '</span>' +
+        '<h1 id="uitkomst-titel" data-focus>Je uitkomst</h1>' +
+        '<div class="result-hero">' +
+          '<p class="label">Geschatte tijdwinst</p>' +
+          '<p class="hero-number">' + esc(r.weergave.tekst) + '</p>' +
+          '<p class="small">Een indicatie op basis van je antwoorden, geen garantie. De werkelijke winst hangt af van hoe je nu werkt en wat je automatiseert.</p>' +
+        '</div>' +
+        '<h2>Top 3 automatiseringen voor jou</h2>' +
+        '<ol class="top3">' + top + '</ol>' +
+        '<details>' +
+          '<summary>Zo rekenen we</summary>' +
+          '<div class="details-body stack">' +
+            '<p>Per onderdeel schatten we hoeveel uur handwerk er per week in zit (volume keer minuten per stuk). Daarvan nemen we een deel dat met automatisering te besparen is, als bandbreedte van laag tot hoog. Die tellen we op.</p>' +
+            '<div class="table-wrap"><table class="resp">' +
+              '<caption>Jouw berekening per onderdeel</caption>' +
+              '<thead><tr><th scope="col">Onderdeel</th><th scope="col" class="num">Handwerk per week</th><th scope="col" class="num">Te besparen</th><th scope="col" class="num">Besparing</th></tr></thead>' +
+              '<tbody>' + rijen + '</tbody>' +
+              '<tfoot><tr><th scope="row">Totaal</th><td class="leeg"></td><td class="leeg"></td><td class="num" data-label="Besparing">' + nl(r.somLaag) + '–' + nl(r.somHoog) + ' u</td></tr></tfoot>' +
+            '</table></div>' +
+            (r.begrensd ? '<p>We begrenzen de uitkomst op ' + Math.round(C.maxAandeelWerktijd * 100) + '% van de werktijd van je team (' + nl(r.cap, 0) + ' uur per week bij ' + C.werkurenPerFte + ' uur per persoon). Bij jouw antwoorden is die grens bereikt.</p>' : '') +
+            '<p><strong>Aannames</strong></p>' +
+            '<ul>' +
+              '<li>Antwoorden in een bandbreedte rekenen we met het midden, bijvoorbeeld "6 tot 15" als 10.</li>' +
+              '<li>Een afspraak of order kost ' + C.kanaalMinuten.tel + ' minuten handwerk als die telefonisch binnenkomt, ' + C.kanaalMinuten.chat + ' via mail of WhatsApp, ' + C.kanaalMinuten.form + ' via een formulier en ' + C.kanaalMinuten.online + ' als die al online doorloopt.</li>' +
+              '<li>Een factuur kost ' + C.factuurMinuten.zonderPakket + ' minuten zonder en ' + C.factuurMinuten.metPakket + ' minuten met boekhoudprogramma, inclusief herinneren.</li>' +
+              '<li>Met een offerteprogramma kost een offerte de helft van de tijd.</li>' +
+              '<li>Kentallen zijn schattingen van fluks, deels onderbouwd met onderzoek naar automatiseringspotentieel van administratief werk. Het overzicht met bronnen sturen we je graag.</li>' +
+            '</ul>' +
+          '</div>' +
+        '</details>' +
+      '</section>' +
+      contactBlok(r, sectorLabel) +
+      '<div class="btn-row" style="margin-top:16px"><button type="button" class="btn btn-secondary" id="opnieuw">Opnieuw beginnen</button></div>';
+    screen.innerHTML = html;
+
+    document.getElementById("opnieuw").addEventListener("click", function () {
+      state = { stap: -1, antwoorden: {} }; render();
+    });
+    koppelContactformulier();
+  }
+
+  function contactBlok(r, sectorLabel) {
+    var samenvatting =
+      "Ingevuld via de AI-scan (" + sectorLabel + ").\n" +
+      "Geschatte tijdwinst: " + r.weergave.tekst + ".\n" +
+      "Top 3: " + r.top3.map(function (m) { return m.titel; }).join("; ") + ".\n\n" +
+      "Ik wil graag een kennismaking plannen.";
+    var waOk = /^[0-9]{8,15}$/.test(WHATSAPP_NUMBER);
+    return '<section class="contact stack" aria-labelledby="contact-titel" style="margin-top:16px">' +
+      '<h2 id="contact-titel">Plan een kennismaking</h2>' +
+      '<p>In een kennismaking kijken we samen welke automatisering bij jou als eerste zinvol is. Je uitkomst sturen we mee, zodat we goed voorbereid zijn.</p>' +
+      '<form class="form" id="contact-form" novalidate>' +
+        '<div class="field"><label for="cf-naam">Je naam</label><input id="cf-naam" name="naam" autocomplete="name" maxlength="100" required></div>' +
+        '<div class="field"><label for="cf-bedrijf">Bedrijf</label><input id="cf-bedrijf" name="bedrijf" autocomplete="organization" maxlength="160" required></div>' +
+        '<div class="field"><label for="cf-contact">Telefoon of e-mail</label><input id="cf-contact" name="contact" autocomplete="email" maxlength="160" required aria-describedby="cf-contact-hint"><span class="small muted" id="cf-contact-hint">Hierop nemen we contact met je op.</span></div>' +
+        '<div class="field"><label for="cf-bericht">Bericht</label><textarea id="cf-bericht" name="bericht" maxlength="2000">' + esc(samenvatting) + '</textarea></div>' +
+        '<input type="hidden" name="branche" value="' + esc(sectorLabel) + '">' +
+        '<div class="gotcha" aria-hidden="true"><label for="cf-gotcha">Laat leeg</label><input id="cf-gotcha" name="_gotcha" tabindex="-1" autocomplete="off"></div>' +
+        '<p class="error" id="cf-fout" role="alert" hidden></p>' +
+        '<div class="btn-row">' +
+          '<button type="submit" class="btn btn-primary" id="cf-verstuur">Verstuur aanvraag</button>' +
+          (waOk ? '<a class="btn btn-secondary" href="https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent("Hallo fluks,\n\n" + samenvatting) + '" target="_blank" rel="noopener">WhatsApp<span class="sr-only"> (opent in nieuw venster)</span></a>' : '') +
+        '</div>' +
+      '</form>' +
+      '<div class="status-ok" id="cf-ok" role="status" tabindex="-1" hidden><strong>Je aanvraag is verstuurd.</strong> We nemen contact met je op via de gegevens die je hebt ingevuld.</div>' +
+    '</section>';
+  }
+
+  function koppelContactformulier() {
+    var form = document.getElementById("contact-form");
+    if (!form) return;
+    var fout = document.getElementById("cf-fout");
+    var knop = document.getElementById("cf-verstuur");
+    function toon(t, veld) {
+      fout.textContent = t; fout.hidden = false;
+      if (veld) document.getElementById(veld).focus();
+    }
+    form.addEventListener("input", function () { fout.hidden = true; });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      fout.hidden = true;
+      var naam = form.naam.value.trim(), bedrijf = form.bedrijf.value.trim(), contact = form.contact.value.trim();
+      if (!naam) return toon("Vul je naam in.", "cf-naam");
+      if (!bedrijf) return toon("Vul de naam van je bedrijf in.", "cf-bedrijf");
+      var isMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+      var isTel = /^[+()\d\s.-]+$/.test(contact) && contact.replace(/\D/g, "").length >= 8;
+      if (!isMail && !isTel) return toon("Vul een geldig telefoonnummer of e-mailadres in.", "cf-contact");
+      knop.disabled = true; knop.textContent = "Bezig met versturen…";
+      fetch(CONTACT_ENDPOINT, { method: "POST", body: new FormData(form) })
+        .then(function (res) { return res.json().catch(function () { return { ok: false }; }); })
+        .then(function (data) {
+          if (data && data.ok) {
+            form.hidden = true;
+            var ok = document.getElementById("cf-ok"); ok.hidden = false; ok.focus();
+          } else if (data && data.error === "invalid") {
+            toon("Controleer je naam, bedrijf en telefoonnummer of e-mailadres.", "cf-naam");
+          } else {
+            toon("Versturen lukte niet. Probeer het later nog eens, of neem contact op via de homepage.");
+          }
+        })
+        .catch(function () { toon("Versturen lukte niet. Controleer je internetverbinding en probeer het opnieuw."); })
+        .then(function () { knop.disabled = false; knop.textContent = "Verstuur aanvraag"; });
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
